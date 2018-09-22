@@ -1,6 +1,6 @@
 package no.syscomiddleware.anki;
 
-import no.syscomiddleware.anki.routes.FinalRoute;
+import no.syscomiddleware.anki.routes.KafkaProducer;
 import org.apache.camel.main.Main;
 import org.apache.camel.main.MainListenerSupport;
 import org.apache.camel.main.MainSupport;
@@ -19,8 +19,8 @@ public final class Application {
 //        main.bind("manageRouteBean", new ManagementBean());
 
         // Add routes
-        main.addRouteBuilder(new FinalRoute());
-
+        //main.addRouteBuilder(new FinalRoute());
+        main.addRouteBuilder(new KafkaProducer());
 
         try {
             main.run();
