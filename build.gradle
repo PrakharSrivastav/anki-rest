@@ -11,9 +11,13 @@ repositories { jcenter() }
 dependencies {
   compile 'org.apache.camel:camel-core:2.21.0'
   compile 'org.apache.camel:camel-elasticsearch-rest:2.21.0'
+  compile 'org.apache.camel:camel-kafka:2.21.0'
 //  compile 'org.apache.camel:camel-jackson:2.21.0'
   compile 'org.apache.camel:camel-xstream:2.21.0'
   compile 'org.apache.camel:camel-jetty:2.21.0'
   compile "ch.qos.logback:logback-classic:1.2.3"
+
+  compile 'org.apache.kafka:kafka-clients:1.1.0'
+  compile 'org.apache.kafka:kafka-streams:1.1.0'
   testCompile group: 'junit', name: 'junit', version: '4.12'
 }
