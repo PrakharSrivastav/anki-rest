@@ -1,0 +1,15 @@
+{
+  "name":"anki-elasticsearch-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+    "topics":"NOTIFICATION",
+    "topics.index.map":"NOTIFICATION:notification_index",
+    "connection.url":"http://localhost:19200",
+    "type.name":"anki",
+    "key.ignore":"true",
+    "schema.ignore":"true",
+    "key.converter":"org.apache.kafka.connect.storage.StringConverter",
+    "value.converter":"org.apache.kafka.connect.json.JsonConverter",
+    "tasks.max": "1"
+  }
+}
