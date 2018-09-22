@@ -5,6 +5,7 @@ import no.syscomiddleware.anki.utils.KafkaEndpointBuilder;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.elasticsearch.ElasticsearchComponent;
+import org.apache.camel.component.kafka.KafkaComponent;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +23,10 @@ public class KafkaConsumer extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        ElasticsearchComponent elasticsearchComponent = new ElasticsearchComponent();
+        final ElasticsearchComponent elasticsearchComponent = new ElasticsearchComponent();
         elasticsearchComponent.setHostAddresses("localhost:19200");
         getContext().addComponent("elasticsearch-rest", elasticsearchComponent);
+
 
         from(this.kafkaEndpoint("NOTIFICATION", null, null))
                 .routeId("KafkaConsumerRoute")
@@ -41,9 +43,7 @@ public class KafkaConsumer extends RouteBuilder {
                     .to(this.esOutput)
                 .otherwise()
                     .log(LoggingLevel.INFO, logger, "EMPTY BODY")
-                .endChoice()
-//                .end()
-        ;
+                .endChoice();
     }
 
 

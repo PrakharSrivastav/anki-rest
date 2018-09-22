@@ -31,6 +31,7 @@ public class KafkaProducer extends RouteBuilder {
                     JSONObject jsonObj = new JSONObject(body.trim());
                     e.getIn().setBody(jsonObj);
                 })
+                .log(LoggingLevel.INFO, logger, "${body}")
 //                .log(LoggingLevel.INFO, logger, "${body}")
                 .to(this.kafkaEndpoint("NOTIFICATION", String.class.getCanonicalName(), null))
 

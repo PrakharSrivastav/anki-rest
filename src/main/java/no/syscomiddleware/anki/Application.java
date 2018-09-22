@@ -23,7 +23,7 @@ public final class Application {
         // Add routes
 //        main.addRouteBuilder(new FinalRoute());
         main.addRouteBuilder(new KafkaProducer());
-        main.addRouteBuilder(new KafkaConsumer());
+//        main.addRouteBuilder(new KafkaConsumer());
 
         try {
             main.run();
