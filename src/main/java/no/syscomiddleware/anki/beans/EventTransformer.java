@@ -8,10 +8,7 @@ import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,8 +19,9 @@ public class EventTransformer {
     // ElasticSearch accepts Object of type IndexRequest, this section transforms the JSONObject to IndexRequest based on type
     public IndexRequest map(final JSONObject model) throws JSONException {
         final IndexRequest request = new IndexRequest("prakhar", "final-reading");
-
+//        System.out.println("IN THE BEAN " + model);
         final String type = model.getString("type");
+//        System.out.println("IN THE BEAN " + type);
         if (type != null && !type.isEmpty()) {
             // check type and convert to proper indexrequest
             switch (type) {
@@ -43,6 +41,7 @@ public class EventTransformer {
                     request.source(this.lapCompletedEvent(model), XContentType.JSON);
                     break;
             }
+//            System.out.println("RETURNING FROM BEAN " + request);
             return request;
         }
         return null;

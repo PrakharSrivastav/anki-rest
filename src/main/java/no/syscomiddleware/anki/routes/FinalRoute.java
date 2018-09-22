@@ -29,47 +29,47 @@ public class FinalRoute extends RouteBuilder {
 
         // expose jetty endpoint to listen to POST requests
         // Comment this section if testing locally against the file
-        from(this.jettyInput)
-                .log(LoggingLevel.INFO, logger, "${headers}")
-                // Convert payload to JSONObject
-                .process((e) -> {
-                    String body = e.getIn().getBody(String.class);
-                    JSONObject jsonObj = new JSONObject(body.trim());
-                    e.getIn().setBody(jsonObj);
-                })
-
-
-                // Check Type of Json and format data accordingly
-                .bean(EventTransformer.class)
-                // if the formatted data is not null then push to elastic search
-                .choice().when(body().isNotNull())
-                    .log(LoggingLevel.INFO, logger, "${body}")
-                    .to(this.esOutput)
-                .endChoice()
-                .end();
-
-// Use below for testing against file under /file directory
-//        from(this.fileInput)
-//                .routeId("FinalRoute")
-//                .streamCaching()
-//                .choice()
-//                .when(header("CamelFileName").regex("formatted.*txt"))
-//                .marshal().string("UTF-8")
-//                .split(body().tokenize(System.lineSeparator()))
+//        from(this.jettyInput)
+//                .log(LoggingLevel.INFO, logger, "${headers}")
+//                // Convert payload to JSONObject
 //                .process((e) -> {
 //                    String body = e.getIn().getBody(String.class);
 //                    JSONObject jsonObj = new JSONObject(body.trim());
 //                    e.getIn().setBody(jsonObj);
 //                })
-//                .bean(ConsolidatedConverter.class)
+//
+//
+//                // Check Type of Json and format data accordingly
+//                .bean(EventTransformer.class)
+//                // if the formatted data is not null then push to elastic search
 //                .choice().when(body().isNotNull())
-//                .log(LoggingLevel.INFO, logger, "${body}")
-//                .to(this.esOutput)
-//                .endChoice()
-//                .endChoice()
-//                .otherwise()
-//                .log(LoggingLevel.INFO, logger, "Invalid file")
+//                    .log(LoggingLevel.INFO, logger, "${body}")
+//                    .to(this.esOutput)
 //                .endChoice()
 //                .end();
+
+// Use below for testing against file under /file directory
+        from(this.fileInput)
+                .routeId("FinalRoute")
+                .streamCaching()
+                .choice()
+                .when(header("CamelFileName").regex("formatted.*txt"))
+                .marshal().string("UTF-8")
+                .split(body().tokenize(System.lineSeparator()))
+                .process((e) -> {
+                    String body = e.getIn().getBody(String.class);
+                    JSONObject jsonObj = new JSONObject(body.trim());
+                    e.getIn().setBody(jsonObj);
+                })
+                .bean(EventTransformer.class)
+                .choice().when(body().isNotNull())
+                .log(LoggingLevel.INFO, logger, "${body}")
+                .to(this.esOutput)
+                .endChoice()
+                .endChoice()
+                .otherwise()
+                .log(LoggingLevel.INFO, logger, "Invalid file")
+                .endChoice()
+                .end();
     }
 }

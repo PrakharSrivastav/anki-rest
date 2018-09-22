@@ -1,43 +1,49 @@
 package no.syscomiddleware.anki.routes;
 
+import no.syscomiddleware.anki.beans.EventTransformer;
 import no.syscomiddleware.anki.utils.KafkaEndpointBuilder;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.kafka.common.serialization.Serdes;
+import org.apache.camel.component.elasticsearch.ElasticsearchComponent;
 import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class KafkaProducer extends RouteBuilder {
-    private String fileInput;
-    private Logger logger = LoggerFactory.getLogger(KafkaProducer.class);
+public class KafkaConsumer extends RouteBuilder {
 
-    public KafkaProducer() {
-        this.fileInput = "file:///home/prakhar/Workspace/java/anki-rest/file?noop=true&delay=10000";
+
+    private static Logger logger = LoggerFactory.getLogger(KafkaConsumer.class);
+    private String esOutput;
+
+    public KafkaConsumer() {
+        this.esOutput = "elasticsearch-rest://docker-cluster?operation=INDEX";
     }
 
     @Override
     public void configure() throws Exception {
-        from(this.fileInput)
-                .routeId("KafkaProducerRoute")
-//                .log(LoggingLevel.INFO, logger, "there")
-                .choice()
-                .when(header("CamelFileName").regex("formatted.*txt"))
-//                .log(LoggingLevel.INFO, logger, "heree")
-                .marshal().string("UTF-8")
-                .split(body().tokenize(System.lineSeparator()))
+
+        ElasticsearchComponent elasticsearchComponent = new ElasticsearchComponent();
+        elasticsearchComponent.setHostAddresses("localhost:19200");
+        getContext().addComponent("elasticsearch-rest", elasticsearchComponent);
+
+        from(this.kafkaEndpoint("NOTIFICATION", null, null))
+                .routeId("KafkaConsumerRoute")
                 .process((e) -> {
                     String body = e.getIn().getBody(String.class);
                     JSONObject jsonObj = new JSONObject(body.trim());
                     e.getIn().setBody(jsonObj);
                 })
-//                .log(LoggingLevel.INFO, logger, "${body}")
-                .to(this.kafkaEndpoint("NOTIFICATION", String.class.getCanonicalName(), null))
-
-
+//                .convertBodyTo(JSONObject.class)
+                .bean(EventTransformer.class)
+                .choice()
+                .when(body().isNotNull())
+                    .log(LoggingLevel.INFO, logger, "THIS IS ES BOSY ${body}")
+                    .to(this.esOutput)
+                .otherwise()
+                    .log(LoggingLevel.INFO, logger, "EMPTY BODY")
                 .endChoice()
-
-                .log(LoggingLevel.INFO, logger, "${headers}");
+//                .end()
+        ;
     }
 
 
