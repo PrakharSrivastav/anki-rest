@@ -12,6 +12,7 @@ dependencies {
   compile 'org.apache.camel:camel-core:2.21.0'
   compile 'org.apache.camel:camel-elasticsearch-rest:2.21.0'
   compile 'org.apache.camel:camel-kafka:2.21.0'
+  compile 'org.apache.camel:camel-slack:2.21.0'
 //  compile 'org.apache.camel:camel-jackson:2.21.0'
   compile 'org.apache.camel:camel-xstream:2.21.0'
   compile 'org.apache.camel:camel-jetty:2.21.0'

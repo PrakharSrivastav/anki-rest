@@ -1,6 +1,5 @@
 package no.syscomiddleware.anki;
 
-import no.syscomiddleware.anki.routes.FinalRoute;
 import no.syscomiddleware.anki.routes.KafkaConsumer;
 import no.syscomiddleware.anki.routes.KafkaProducer;
 import org.apache.camel.main.Main;
@@ -16,14 +15,12 @@ public final class Application {
         final Main main = new Main();
         main.addMainListener(new Events());
 
+        // Camel-ELK stack Integration routes
+//        main.addRouteBuilder(new FinalRoute());
 
-        // Add beans
-//        main.bind("manageRouteBean", new ManagementBean());
-
-        // Add routes
-        main.addRouteBuilder(new FinalRoute());
-//        main.addRouteBuilder(new KafkaProducer());
-//        main.addRouteBuilder(new KafkaConsumer());
+        // Camel-Kafka-ELK stack Integraiton routes
+        main.addRouteBuilder(new KafkaProducer());
+        main.addRouteBuilder(new KafkaConsumer());
 
         try {
             main.run();

@@ -55,14 +55,14 @@ public class EventTransformer {
     }
 
     // Custom date formatter
-    private final DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yy HH:mm:ss:SSSSSS")
-            .withLocale(Locale.ROOT)
-            .withChronology(ISOChronology.getInstanceUTC());
+    private final DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yy HH:mm:ss:SSSSSS");
+//            .withLocale(Locale.ROOT)
+//            .withChronology(ISOChronology.getInstanceUTC());
 
     // Customer date formatter
-    private final DateTimeFormatter formatterTimestamp = DateTimeFormat.forPattern("dd/MM/yy HH:mm:ss")
-            .withLocale(Locale.ROOT)
-            .withChronology(ISOChronology.getInstanceUTC());
+    private final DateTimeFormatter formatterTimestamp = DateTimeFormat.forPattern("dd/MM/yy HH:mm:ss");
+//            .withLocale(Locale.ROOT)
+//            .withChronology(ISOChronology.getInstanceUTC());
 
 
     private Map<String, Object> carTransitionedEvent(final JSONObject model) throws JSONException {
