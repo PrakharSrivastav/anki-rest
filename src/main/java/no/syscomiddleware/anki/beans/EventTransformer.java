@@ -16,14 +16,22 @@ import java.util.Locale;
 import java.util.Map;
 
 public class EventTransformer {
-    // ElasticSearch accepts Object of type IndexRequest, this section transforms the JSONObject to IndexRequest based on type
+
+    /**
+     * Convert the JSONObject event to a structured ES document
+     *
+     * @param model JSONObject event sent from bluetooth device
+     * @return IndexRequest which ElasticSearch understands
+     * @throws JSONException
+     */
     public IndexRequest map(final JSONObject model) throws JSONException {
         final IndexRequest request = new IndexRequest("prakhar", "final-reading");
-//        System.out.println("IN THE BEAN " + model);
         final String type = model.getString("type");
-//        System.out.println("IN THE BEAN " + type);
+
+
+        // Switch on type and return structured Indexrequest for Elasticsearch Component.
+        // Structure of each event type has minor differences over the others, so we process them separately.
         if (type != null && !type.isEmpty()) {
-            // check type and convert to proper indexrequest
             switch (type) {
                 case "CAR_TRANSITIONED":
                     request.source(this.carTransitionedEvent(model), XContentType.JSON);
@@ -41,20 +49,21 @@ public class EventTransformer {
                     request.source(this.lapCompletedEvent(model), XContentType.JSON);
                     break;
             }
-//            System.out.println("RETURNING FROM BEAN " + request);
             return request;
         }
         return null;
     }
 
-
+    // Custom date formatter
     private final DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yy HH:mm:ss:SSSSSS")
             .withLocale(Locale.ROOT)
             .withChronology(ISOChronology.getInstanceUTC());
 
+    // Customer date formatter
     private final DateTimeFormatter formatterTimestamp = DateTimeFormat.forPattern("dd/MM/yy HH:mm:ss")
             .withLocale(Locale.ROOT)
             .withChronology(ISOChronology.getInstanceUTC());
+
 
     private Map<String, Object> carTransitionedEvent(final JSONObject model) throws JSONException {
         //  {'type':'CAR_TRANSITIONED',         'carId':'FC:70:98:68:10:BA:01',         'deviceId':'',         'carName':'Skull',         'trackSegment':22,         'lap':123,         'raceStatus':'',         'trackStyle':'Left Turn',         'raceId':1,         'dateTime':1537366468,         'dateTimeString':'18/09/19 16:14:28:403930',         'demozone':''}
@@ -143,13 +152,22 @@ public class EventTransformer {
         return map;
     }
 
+
+    // We are mocking current time for now. Later use the exact timestamp from bluetooth device
     private DateTime getDateTime(JSONObject model) throws JSONException {
-        final Date date = new Date(model.getInt("dateTime") * 1000l);
+//        final Date date = new Date(model.getInt("dateTime") * 1000l);
+        final Date date = new Date(System.currentTimeMillis());
         final SimpleDateFormat jdf = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
         return this.formatterTimestamp.parseDateTime(jdf.format(date));
     }
 
+    // We are mocking current time for now. Later use the exact timestamp from bluetooth device
     private DateTime getDateTimeString(JSONObject model) throws JSONException {
-        return this.formatter.parseDateTime(model.getString("dateTimeString"));
+
+        final Date date = new Date(System.currentTimeMillis());
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss:SSSSSS");
+        return this.formatter.parseDateTime(simpleDateFormat.format(date));
+
+//        return this.formatter.parseDateTime(model.getString("dateTimeString"));
     }
 }

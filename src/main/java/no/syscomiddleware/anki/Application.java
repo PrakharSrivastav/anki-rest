@@ -21,8 +21,8 @@ public final class Application {
 //        main.bind("manageRouteBean", new ManagementBean());
 
         // Add routes
-//        main.addRouteBuilder(new FinalRoute());
-        main.addRouteBuilder(new KafkaProducer());
+        main.addRouteBuilder(new FinalRoute());
+//        main.addRouteBuilder(new KafkaProducer());
 //        main.addRouteBuilder(new KafkaConsumer());
 
         try {

@@ -1,4 +1,3 @@
-
 {"carId": "F3:1E:F7:51:DF:0A:01", "deviceId": "", "carName": "Ground Shock", "lap": 20, "raceStatus": "", "raceId": 1, "trackId": 33, "dateTime": 1537527395, "dateTimeString": "18/09/21 12:56:35", "type": "SPEED_MEASUREMENT", "speed": 1990, "demozone": ""}
 {"carId": "F3:1E:F7:51:DF:0A:01", "deviceId": "", "carName": "Ground Shock", "trackSegment": 1, "lap": 20, "raceStatus": "", "trackStyle": "Left Turn", "raceId": 1, "dateTime": 1537527395, "dateTimeString": "18/09/21 12:56:35:113225", "type": "CAR_TRANSITIONED", "demozone": ""}
 {"carId": "F3:1E:F7:51:DF:0A:01", "deviceId": "", "carName": "Ground Shock", "lap": 20, "raceStatus": "", "raceId": 1, "trackId": 40, "dateTime": 1537527395, "dateTimeString": "18/09/21 12:56:35", "type": "SPEED_MEASUREMENT", "speed": 2055, "demozone": ""}

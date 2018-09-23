@@ -1,17 +1,5 @@
 version: "2"
-# https://github.com/sqshq/ELK-docker
 services:
-
-#  camel:
-#    build: .
-#    #image: syscomiddleware/camelfilereader
-#    depends_on:
-#      - elasticsearch
-#    environment:
-#      - JVM_OPTS=-Xmx1024m -Xms256m -XX:MaxPermSize=1024m
-#    volumes:
-#      - ./files:/home/oracle/fileInput
-
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.1.1
     environment:
